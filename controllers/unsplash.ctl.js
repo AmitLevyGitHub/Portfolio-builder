@@ -5,7 +5,7 @@ const consts = require("../consts.js"),
   errorObj = require("../errorObj");
 
 const { UNSPLASH_KEY, UNSPLASH_SECRET } = consts;
-
+let id = "";
 const axiosCreat = axios.create({
   baseURL: `https://api.unsplash.com`,
   headers: {
@@ -15,13 +15,15 @@ const axiosCreat = axios.create({
 
 module.exports = {
   async getphotos(req, res) {
-    if (Object.entries(req.query).length === 0) {
+    if (Object.entries(req.query).length === 1) {
       res.json(
         errorObj(404, "Please send Answers as parameters in post request")
       );
     } else {
-      let answers = req.query,
-        numOfParams = Object.keys(answers).length,
+      let answers = req.query;
+      id = req.query.id;
+      delete answers.id;
+      let numOfParams = Object.keys(answers).length,
         numOfphotos = 4,
         indexOfPhoto = 0;
 
@@ -61,7 +63,7 @@ module.exports = {
             });
           }
 
-          User.findOne({ id: "jFkde_Tvab" }, (err, result) => {
+          User.findOne({ id: id }, (err, result) => {
             if (err) res.json(errorObj(404, err));
             else if (result) {
               result.photos.push(`${photoId}`);
@@ -73,5 +75,6 @@ module.exports = {
         });
       }
     }
+    res.redirect(`./showProfile?id=${id}`);
   }
 };

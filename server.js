@@ -3,6 +3,7 @@ const express = require("express");
 const linkedinCtl = require("./controllers/linkedin.ctl");
 const unsplashCtl = require("./controllers/unsplash.ctl");
 const profileCtl = require("./controllers/profile.ctl");
+const middlewares = require("./controllers/middlewares");
 const app = express();
 const port = process.env.PORT || 3000;
 app.set("port", port);
@@ -21,11 +22,14 @@ app.use((req, res, next) => {
 
 /*** All routes ***/
 app.get("/authorize", linkedinCtl.linkedinConnect);
-app.post("/photos", unsplashCtl.getphotos);
+
 app.get("/showProfile", profileCtl.showProfile);
-app.get("/callback", linkedinCtl.callback);
-app.get("/check", (req, res) => {
-  res.send("back in server");
-});
+app.get(
+  "/callback",
+  middlewares.getAccessCode,
+  middlewares.setAccessToken,
+  linkedinCtl.callback
+);
+app.get("/questions", unsplashCtl.getphotos);
 
 app.listen(port, () => console.log(`listening on port ${port}`));

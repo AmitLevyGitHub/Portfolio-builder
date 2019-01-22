@@ -2,12 +2,11 @@ const User = require("../models/user"),
   errorObj = require("../errorObj"),
   Photo = require("../models/photo");
 
-let id = "nU_3bpnSBH";
 let response;
 
 module.exports = {
   showProfile(req, res) {
-    User.findOne({ id: id }, (err, result) => {
+    User.findOne({ id: req.query.id }, (err, result) => {
       if (err) res.json(errorObj(404, err));
       else if (result) {
         response = result;
