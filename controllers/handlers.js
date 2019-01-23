@@ -1,7 +1,6 @@
 const axios = require("axios"),
   errorObj = require("../errorObj"),
-  User = require("../models/user"),
-  Photo = require("../models/photo");
+  User = require("../models/user");
 
 module.exports = {
   getLinkdinInfo(accessToken) {
@@ -60,39 +59,5 @@ module.exports = {
       }
     });
     return id;
-  },
-
-  async savePhotoToDb(results, id, numOfParams, indexOfPhoto) {
-    for (let i = 0; i < numOfParams; i++) {
-      let photoId = results[i][indexOfPhoto].id,
-        photoUrl = results[i][indexOfPhoto].urls.regular;
-
-      await Photo.findOne({ id: photoId }, (err, result) => {
-        if (err) res.json(errorObj(404, err));
-        if (!result) {
-          const photo = new Photo({
-            id: photoId,
-            url: photoUrl
-          });
-
-          photo.save(err => {
-            if (err) res.json(errorObj(404, err));
-            else {
-              console.log(`Saved photo ${JSON.stringify(photo)}`);
-            }
-          });
-        }
-
-        User.findOne({ id: id }, (err, result) => {
-          if (err) res.json(errorObj(404, err));
-          else if (result) {
-            result.photos.push(`${photoId}`);
-            result.save(err => {
-              if (err) res.json(errorObj(404, err));
-            });
-          }
-        });
-      });
-    }
   }
 };

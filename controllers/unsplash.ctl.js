@@ -1,7 +1,8 @@
 const consts = require("../consts.js"),
   axios = require("axios"),
   errorObj = require("../errorObj"),
-  handlers = require("./handlers");
+  User = require("../models/user"),
+  Photo = require("../models/photo");
 
 const { UNSPLASH_KEY, UNSPLASH_SECRET } = consts;
 let id = "";
@@ -21,8 +22,6 @@ module.exports = {
     } else {
       let answers = req.query,
         id = process.env.ID;
-      console.log(id);
-      //delete answers.id;
       let numOfParams = Object.keys(answers).length,
         numOfphotos = 4,
         indexOfPhoto = 0;
@@ -43,7 +42,41 @@ module.exports = {
         results.push(result.data.results);
       }
 
-      handlers.savePhotoToDb(results, id, numOfParams, indexOfPhoto);
+      for (let i = 0; i < numOfParams; i++) {
+        if (results[i].length == 0) {
+          console.log("Photo did not found");
+          continue;
+        }
+        let photoId = results[i][indexOfPhoto].id,
+          photoUrl = results[i][indexOfPhoto].urls.regular;
+
+        await Photo.findOne({ id: photoId }, (err, result) => {
+          if (err) res.json(errorObj(404, err));
+          if (!result) {
+            const photo = new Photo({
+              id: photoId,
+              url: photoUrl
+            });
+
+            photo.save(err => {
+              if (err) res.json(errorObj(404, err));
+              else {
+                console.log(`Saved photo ${JSON.stringify(photo)}`);
+              }
+            });
+          }
+
+          User.findOne({ id: id }, (err, result) => {
+            if (err) res.json(errorObj(404, err));
+            else if (result) {
+              result.photos.push(`${photoId}`);
+              result.save(err => {
+                if (err) res.json(errorObj(404, err));
+              });
+            }
+          });
+        });
+      }
       res.redirect(`./showProfile`);
     }
   }
