@@ -4,7 +4,7 @@ const User = require("../models/user"),
 
 module.exports = {
   async showProfile(req, res) {
-    let response = await User.findOne({ id: req.query.id }, (err, result) => {
+    let response = await User.findOne({ id: process.env.ID }, (err, result) => {
       if (err) res.json(errorObj(404, err));
     });
 

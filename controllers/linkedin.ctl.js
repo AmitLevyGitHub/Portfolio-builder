@@ -49,8 +49,11 @@ module.exports = {
     const { accessToken } = req.res.locals;
     handlers
       .getLinkdinInfo(accessToken)
-      .then(result => handlers.saveToDb(result))
-      .then(id => res.redirect(`/questions?id=${id}`))
+      .then(result => handlers.saveUserToDb(result))
+      .then(id => {
+        process.env.ID = id;
+        res.redirect(`/questions`);
+      })
       .catch(err => {
         res.send(`ERROR 2: ${err}`);
       });

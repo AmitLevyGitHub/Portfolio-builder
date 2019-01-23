@@ -1,8 +1,7 @@
 const consts = require("../consts.js"),
-  User = require("../models/user"),
-  Photo = require("../models/photo"),
   axios = require("axios"),
-  errorObj = require("../errorObj");
+  errorObj = require("../errorObj"),
+  handlers = require("./handlers");
 
 const { UNSPLASH_KEY, UNSPLASH_SECRET } = consts;
 let id = "";
@@ -15,14 +14,15 @@ const axiosCreat = axios.create({
 
 module.exports = {
   async getphotos(req, res) {
-    if (Object.entries(req.query).length === 1) {
+    if (Object.entries(req.query).length === 0) {
       return res.json(
         errorObj(404, "Please send Answers as parameters in post request")
       );
     } else {
-      let answers = req.query;
-      id = req.query.id;
-      delete answers.id;
+      let answers = req.query,
+        id = process.env.ID;
+      console.log(id);
+      //delete answers.id;
       let numOfParams = Object.keys(answers).length,
         numOfphotos = 4,
         indexOfPhoto = 0;
@@ -43,38 +43,8 @@ module.exports = {
         results.push(result.data.results);
       }
 
-      for (let i = 0; i < numOfParams; i++) {
-        let photoId = results[i][indexOfPhoto].id,
-          photoUrl = results[i][indexOfPhoto].urls.regular;
-
-        Photo.findOne({ id: photoId }, (err, result) => {
-          if (err) res.json(errorObj(404, err));
-          if (!result) {
-            const photo = new Photo({
-              id: photoId,
-              url: photoUrl
-            });
-
-            photo.save(err => {
-              if (err) res.json(errorObj(404, err));
-              else {
-                console.log(`Saved photo ${JSON.stringify(photo)}`);
-              }
-            });
-          }
-
-          User.findOne({ id: id }, (err, result) => {
-            if (err) res.json(errorObj(404, err));
-            else if (result) {
-              result.photos.push(`${photoId}`);
-              result.save(err => {
-                if (err) res.json(errorObj(404, err));
-              });
-            }
-          });
-        });
-      }
+      handlers.savePhotoToDb(results, id, numOfParams, indexOfPhoto);
+      res.redirect(`./showProfile`);
     }
-    res.redirect(`./showProfile?id=${id}`);
   }
 };
