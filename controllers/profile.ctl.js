@@ -12,6 +12,20 @@ module.exports = {
     refactorPhotos(response)
       .then(response => res.json(response))
       .catch(err => errorObj(404, err));
+  },
+
+  async updateSummary(req, res) {
+    let summary = req.body.summary;
+    console.log(summary);
+
+    const conditions = { id: process.env.ID };
+    const doc = { $set: { "profile.summary": `${summary}` } };
+
+    await User.updateOne(conditions, doc, (err, result) => {
+      if (err) res.json(errorObj(404, err));
+      else if (result.nModified == 0) res.json(errorObj(404, "did not update"));
+      else res.redirect("/showProfile");
+    });
   }
 };
 

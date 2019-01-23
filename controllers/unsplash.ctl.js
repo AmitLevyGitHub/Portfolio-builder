@@ -15,12 +15,13 @@ const axiosCreat = axios.create({
 
 module.exports = {
   async getphotos(req, res) {
-    if (Object.entries(req.query).length === 0) {
+    if (Object.entries(req.body).length === 0) {
       return res.json(
         errorObj(404, "Please send Answers as parameters in post request")
       );
     } else {
-      let answers = req.query,
+      console.log("in else");
+      let answers = req.body,
         id = process.env.ID;
       let numOfParams = Object.keys(answers).length,
         numOfphotos = 4,

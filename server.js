@@ -7,6 +7,9 @@ const app = express();
 const port = process.env.PORT || 3000;
 app.set("port", port);
 
+const Parser = require("body-parser");
+app.use(Parser.urlencoded({ extended: true }));
+
 app.use("/", express.static("./public")); // for API
 
 app.use((req, res, next) => {
@@ -21,8 +24,9 @@ app.use((req, res, next) => {
 
 /*** All routes ***/
 app.get("/", linkedinCtl.linkedinConnect);
-app.get("/callback", linkedinCtl.getAccessToken, linkedinCtl.setAccessToken);
-app.get("/questions", unsplashCtl.getphotos);
+app.get("/authorize", linkedinCtl.getAccessToken, linkedinCtl.setAccessToken);
+app.post("/questions", unsplashCtl.getphotos);
 app.get("/showProfile", profileCtl.showProfile);
+app.put("/update", profileCtl.updateSummary);
 
 app.listen(port, () => console.log(`listening on port ${port}`));
