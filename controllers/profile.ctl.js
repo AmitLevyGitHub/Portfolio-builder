@@ -12,15 +12,18 @@ module.exports = {
         console.log(`error occurred- ${err}`);
         res.json(errorObj(404, err));
       }
+      if (!result) {
+        console.log(
+          `error occurred- User does not exist in DB, Please sign in with Linkedin}`
+        );
+        res.json(
+          errorObj(
+            404,
+            `User does not exist in DB, Please sign in with Linkedin`
+          )
+        );
+      }
     });
-    if (!result) {
-      console.log(
-        `error occurred- User does not exist in DB, Please sign in with Linkedin}`
-      );
-      res.json(
-        errorObj(404, `User does not exist in DB, Please sign in with Linkedin`)
-      );
-    }
 
     refactorPhotos(response) //refactor information
       .then(response => res.json(response)) //display respones (refactored information) to browser
