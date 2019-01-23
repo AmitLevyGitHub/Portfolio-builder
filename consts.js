@@ -1,7 +1,7 @@
 module.exports = {
   CLIENT_ID: `7759iu3fwfxudj`,
   CLIENT_SECRET: `xNb1FQmbhVrj7HqL`,
-  REDIRECT_URI: `http://localhost:3000/callback`,
+  REDIRECT_URI: `https://portfolio-builder-server-side.herokuapp.com/callback`,
   SCOPE: [`r_basicprofile`],
   STATE: `1q2we3r45t6yu7i8`,
   UNSPLASH_KEY: `59314f91125a5a9ae1adc2cfc69120348740a942b53339135d03263aa2443197`,
