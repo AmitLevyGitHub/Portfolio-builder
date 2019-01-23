@@ -20,7 +20,7 @@ app.use((req, res, next) => {
 });
 
 /*** All routes ***/
-app.get("/", linkedinCtl.linkedinConnect);
+app.get("/authorize", linkedinCtl.linkedinConnect);
 app.get("/callback", linkedinCtl.getAccessToken, linkedinCtl.setAccessToken);
 app.get("/questions", unsplashCtl.getphotos);
 app.get("/showProfile", profileCtl.showProfile);
