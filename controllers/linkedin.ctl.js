@@ -20,7 +20,7 @@ module.exports = {
 
     if (state !== STATE) {
       //checking for possible CSRF attack
-      res.json(res.json(errorObj(404, "atack suspection")));
+      res.json(res.json(errorObj(404, `CSRF attack suspection`)));
     }
 
     const params = new URLSearchParams();
@@ -51,6 +51,8 @@ module.exports = {
   //This function will get the Access Token and use it to fetch information from Linkedin
   setAccessToken(req, res, next) {
     const { accessToken } = req.res.locals; //get accessToken as local var in order to use it to fetch information from Linkedin
+
+    console.log(`Fetching Users Linkedin information`);
     handlers
       .getLinkdinInfo(accessToken) //get User Linkedin information
       .then(result => handlers.saveUserToDb(result)) //save information to DB
