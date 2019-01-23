@@ -1,17 +1,15 @@
-const express = require("express");
+const express = require("express"),
+  Parser = require("body-parser");
 
-const linkedinCtl = require("./controllers/linkedin.ctl");
-const unsplashCtl = require("./controllers/unsplash.ctl");
-const profileCtl = require("./controllers/profile.ctl");
+const linkedinCtl = require("./controllers/linkedin.ctl"),
+  unsplashCtl = require("./controllers/unsplash.ctl"),
+  profileCtl = require("./controllers/profile.ctl");
+
 const app = express();
 const port = process.env.PORT || 3000;
 app.set("port", port);
 
-const Parser = require("body-parser");
 app.use(Parser.urlencoded({ extended: true }));
-
-app.use("/", express.static("./public")); // for API
-
 app.use((req, res, next) => {
   res.header("Access-Control-Allow-Origin", "*");
   res.header(
@@ -22,11 +20,11 @@ app.use((req, res, next) => {
   next();
 });
 
-/*** All routes ***/
-app.get("/", linkedinCtl.linkedinConnect);
-app.get("/authorize", linkedinCtl.getAccessToken, linkedinCtl.setAccessToken);
-app.post("/questions", unsplashCtl.getphotos);
-app.get("/showProfile", profileCtl.showProfile);
-app.put("/update", profileCtl.updateSummary);
+/* Routes */
+app.get("/", linkedinCtl.linkedinConnect); // Loging in with Linkedin- route will automatically redirect to "/authorize"
+app.get("/authorize", linkedinCtl.getAccessToken, linkedinCtl.setAccessToken); // Authorizing Linkedin connection- route will automatically redirect to "/questions
+app.post("/questions", unsplashCtl.getphotos); // Answering questions and sending the answers as POST request- route will automatically redirect to "/showProfile
+app.get("/showProfile", profileCtl.showProfile); //Showing User profile
+app.put("/update", profileCtl.updateSummary); // Updating summary field in User profile- route will automatically redirect to "/showProfile
 
 app.listen(port, () => console.log(`listening on port ${port}`));

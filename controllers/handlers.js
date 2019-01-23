@@ -3,7 +3,9 @@ const axios = require("axios"),
   User = require("../models/user");
 
 module.exports = {
+  //This function will fetch Linkedin User information
   getLinkdinInfo(accessToken) {
+    console.log(`getting Linkedin information`);
     return axios.get(
       "/v1/people/~:(id,first-name,last-name,summary,positions,num-connections,picture-url,headline)?format=json",
       {
@@ -17,26 +19,34 @@ module.exports = {
     );
   },
 
+  //This function will save the information fetched from Linkedin to the DataBase
   async saveUserToDb(response) {
-    const id = response.data.id;
+    const id = response.data.id; // id will be returned and save as env var
     const position = {
+      //assuming user has no current position in their Linkedin profile, to prevent accsses to undefiend field
       title: undefined,
       company: undefined,
       summary: undefined
     };
 
+    //if User has a current position in their Linkedin profile, assign the relevant fields
     if (response.data.positions._total == 1) {
       position.title = response.data.positions.values[0].title;
       position.company = response.data.positions.values[0].company.name;
       position.summary = response.data.positions.values[0].summary;
     }
 
-    await User.findOne({ id: `${response.data.id}` }, (err, result) => {
-      if (err) throw err;
-      else {
+    //Checking if User exists in DataBase
+    await User.findOne({ id: id }, (err, result) => {
+      if (err) {
+        console.log(`error occurred- ${err}`);
+        res.json(errorObj(404, err));
+      } else {
         if (!result) {
+          // if User does not exist, create new user document
+          console.log(`Creating new User document for User id ${id}`);
           const user = new User({
-            id: `${response.data.id}`,
+            id: `${id}`,
             firstName: `${response.data.firstName}`,
             lastName: `${response.data.lastName}`,
             profile: {
@@ -45,15 +55,18 @@ module.exports = {
               numOfConnections: `${response.data.numConnections}`,
               profilePicture: `${response.data.pictureUrl}`,
               currentPosition: {
-                title: `${response.data.positions.values[0].title}`,
-                company: `${response.data.positions.values[0].company.name}`,
-                summary: `${response.data.positions.values[0].summary}`
+                title: `${position.title}`,
+                company: `${position.company}`,
+                summary: `${position.company}`
               }
             }
           });
 
           user.save(err => {
-            if (err) return res.json(errorObj(404, err));
+            if (err) {
+              console.log(`error occurred- ${err}`);
+              return res.json(errorObj(404, err));
+            } else console.log(`Document Saved successfully`);
           });
         }
       }

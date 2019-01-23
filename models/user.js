@@ -1,6 +1,5 @@
-const mongoose = require("mongoose");
-const profile = require("./profile"),
-  photo = require("./photo");
+const mongoose = require("mongoose"),
+  profile = require("./profile");
 
 const user = new mongoose.Schema(
   {

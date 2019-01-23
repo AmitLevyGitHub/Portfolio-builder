@@ -8,21 +8,19 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/EranMaron/Portfolio-Server-Side.git"
+    "url": "git+https://github.com/AmitPLevy/Portfolio-builder.git"
   },
   "author": "Eran Maron & Amit Levy",
   "license": "ISC",
   "bugs": {
-    "url": "https://github.com/EranMaron/Portfolio-Server-Side/issues"
+    "url": "https://github.com/AmitPLevy/Portfolio-builder/issues"
   },
-  "homepage": "https://github.com/EranMaron/Portfolio-Server-Side#readme",
+  "homepage": "https://github.com/AmitPLevy/Portfolio-builder#readme",
   "dependencies": {
     "axios": "^0.18.0",
     "body-parser": "^1.18.3",
     "express": "^4.16.4",
-    "mongoose": "^5.4.5",
-    "node-linkedin": "^0.5.6",
-    "request": "^2.88.0"
+    "mongoose": "^5.4.5"
   },
   "devDependencies": {}
 }
