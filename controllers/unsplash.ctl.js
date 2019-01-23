@@ -16,7 +16,7 @@ const axiosCreat = axios.create({
 module.exports = {
   async getphotos(req, res) {
     if (Object.entries(req.query).length === 1) {
-      res.json(
+      return res.json(
         errorObj(404, "Please send Answers as parameters in post request")
       );
     } else {

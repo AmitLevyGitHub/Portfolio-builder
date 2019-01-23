@@ -2,24 +2,23 @@ const User = require("../models/user"),
   errorObj = require("../errorObj"),
   Photo = require("../models/photo");
 
-let response;
-
 module.exports = {
-  showProfile(req, res) {
-    User.findOne({ id: req.query.id }, (err, result) => {
+  async showProfile(req, res) {
+    let response = await User.findOne({ id: req.query.id }, (err, result) => {
       if (err) res.json(errorObj(404, err));
-      else if (result) {
-        response = result;
-      }
-
-      for (let i = 0; i < response.__v; i++) {
-        Photo.findOne({ id: response.photos[i] }, (error, result) => {
-          if (error) res.json(errorObj(404, error));
-          response.photos[i] = result.url;
-        });
-      }
     });
 
-    res.json(response);
+    refactorPhotos(response).then(response => res.json(response));
   }
 };
+
+//function will replace photos id in their url
+async function refactorPhotos(response) {
+  for (let i = 0; i < response.__v; i++) {
+    await Photo.findOne({ id: response.photos[i] }, (error, result) => {
+      if (error) res.json(errorObj(404, error));
+      response.photos[i] = result.url;
+    });
+  }
+  return response;
+}
