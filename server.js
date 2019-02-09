@@ -3,7 +3,8 @@ const express = require("express"),
 
 const linkedinCtl = require("./controllers/linkedin.ctl"),
   unsplashCtl = require("./controllers/unsplash.ctl"),
-  profileCtl = require("./controllers/profile.ctl");
+  profileCtl = require("./controllers/profile.ctl"),
+  youtubeCtl = require("./controllers/youtube.ctl");
 
 const app = express();
 const port = process.env.PORT || 3000;
@@ -24,7 +25,9 @@ app.use((req, res, next) => {
 app.get("/", linkedinCtl.linkedinConnect); // Loging in with Linkedin- route will automatically redirect to "/authorize"
 app.get("/authorize", linkedinCtl.getAccessToken, linkedinCtl.setAccessToken); // Authorizing Linkedin connection- route will automatically redirect to "/questions
 app.post("/questions", unsplashCtl.getphotos); // Answering questions and sending the answers as POST request- route will automatically redirect to "/showProfile
+app.get("/videos", youtubeCtl.getVideos);
+app.get("/chooseVideos", youtubeCtl.chooseVideos);
 app.get("/showProfile", profileCtl.showProfile); //Showing User profile
-app.put("/update", profileCtl.updateSummary); // Updating summary field in User profile- route will automatically redirect to "/showProfile
+app.put("/updateSummary", profileCtl.updateSummary); // Updating summary field in User profile- route will automatically redirect to "/showProfile
 
 app.listen(port, () => console.log(`listening on port ${port}`));
