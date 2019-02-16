@@ -4,7 +4,7 @@ const axios = require("axios"),
   User = require("../models/user"),
   Photo = require("../models/photo");
 
-const { UNSPLASH_KEY } = consts;
+const {UNSPLASH_KEY} = consts;
 
 //Creating a new instance of axios
 const axiosCreate = axios.create({
@@ -61,7 +61,7 @@ module.exports = {
           photoUrl = results[i][indexOfPhoto].urls.regular;
 
         //checking if the photo exists in Database
-        await Photo.findOne({ id: photoId }, (err, result) => {
+        await Photo.findOne({id: photoId}, (err, result) => {
           if (err) {
             console.log(`error occurred- ${err}`);
             res.json(errorObj(404, err));
@@ -86,7 +86,7 @@ module.exports = {
           }
 
           //save photo id to User's photos array
-          User.findOne({ id: id }, (err, result) => {
+          User.findOne({id: id}, (err, result) => {
             if (err) {
               console.log(`error occurred- ${err}`);
               res.json(errorObj(404, err));
@@ -107,5 +107,5 @@ module.exports = {
       }
       res.redirect(`./showProfile`);
     }
-  }
+  },
 };

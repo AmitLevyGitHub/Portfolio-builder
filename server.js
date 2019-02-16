@@ -9,7 +9,7 @@ const app = express();
 const port = process.env.PORT || 3000;
 app.set("port", port);
 
-app.use(Parser.urlencoded({ extended: true }));
+app.use(Parser.urlencoded({extended: true}));
 app.use((req, res, next) => {
   res.header("Access-Control-Allow-Origin", "*");
   res.header(
@@ -23,6 +23,7 @@ app.use((req, res, next) => {
 /* Routes */
 app.get("/", linkedinCtl.linkedinConnect); // Loging in with Linkedin- route will automatically redirect to "/authorize"
 app.get("/authorize", linkedinCtl.getAccessToken, linkedinCtl.setAccessToken); // Authorizing Linkedin connection- route will automatically redirect to "/questions
+app.get("/cancelled", linkedinCtl.cancellErr);
 app.post("/questions", unsplashCtl.getphotos); // Answering questions and sending the answers as POST request- route will automatically redirect to "/showProfile
 app.get("/showProfile", profileCtl.showProfile); //Showing User profile
 app.put("/update", profileCtl.updateSummary); // Updating summary field in User profile- route will automatically redirect to "/showProfile

@@ -3,7 +3,7 @@ const axios = require("axios"),
   errorObj = require("../errorObj"),
   handlers = require("./handlers");
 
-const { CLIENT_ID, CLIENT_SECRET, REDIRECT_URI, SCOPE, STATE } = consts;
+const {CLIENT_ID, CLIENT_SECRET, REDIRECT_URI, SCOPE, STATE} = consts;
 
 module.exports = {
   //This function will redirect the url to Linkedin, in order to get Access code
@@ -15,42 +15,48 @@ module.exports = {
   },
   //This function will get the Access code and use it to post request to linkedin in order to get AccessToken
   getAccessToken(req, res, next) {
-    const authCode = req.query.code;
-    const state = req.query.state;
+    //Checking if the user refused to login into LinkedIn account
+    //or refused to authorize permissions request from the service
+    if (req.query.error === "user_cancelled_login" || req.query.error === "user_cancelled_authorize") {
+      let errDesc = req.query.error_description;
+      res.redirect(`/cancelled?error_description=${errDesc}`);
+    } else {
+      const authCode = req.query.code;
+      const state = req.query.state;
 
-    if (state !== STATE) {
-      //checking for possible CSRF attack
-      res.json(res.json(errorObj(404, `CSRF attack suspection`)));
+      if (state !== STATE) {
+        //checking for possible CSRF attack
+        res.json(errorObj(404, `CSRF attack suspection`));
+      }
+      const params = new URLSearchParams();
+      params.append("grant_type", "authorization_code");
+      params.append("code", authCode);
+      params.append("redirect_uri", REDIRECT_URI);
+      params.append("client_id", CLIENT_ID);
+      params.append("client_secret", CLIENT_SECRET);
+      params.append("state", STATE);
+
+      axios //request for Access Token
+        .post("/oauth/v2/accessToken", params, {
+          baseURL: "https://www.linkedin.com",
+          headers: {
+            Host: "www.linkedin.com",
+            "Content-Type": "application/x-www-form-urlencoded"
+          }
+        })
+        .then(response => {
+          res.locals.accessToken = response.data.access_token; //passing accessToken as local var in order to use it in the next middlewear
+          next();
+        })
+        .catch(err => {
+          console.log(`error occurred- ${err}`);
+          res.json(errorObj(401, err));
+        });
     }
-
-    const params = new URLSearchParams();
-    params.append("grant_type", "authorization_code");
-    params.append("code", authCode);
-    params.append("redirect_uri", REDIRECT_URI);
-    params.append("client_id", CLIENT_ID);
-    params.append("client_secret", CLIENT_SECRET);
-    params.append("state", STATE);
-
-    axios //request for Access Token
-      .post("/oauth/v2/accessToken", params, {
-        baseURL: "https://www.linkedin.com",
-        headers: {
-          Host: "www.linkedin.com",
-          "Content-Type": "application/x-www-form-urlencoded"
-        }
-      })
-      .then(response => {
-        res.locals.accessToken = response.data.access_token; //passing accessToken as local var in order to use it in the next middlewear
-        next();
-      })
-      .catch(err => {
-        console.log(`error occurred- ${err}`);
-        res.json(errorObj(404, err));
-      });
   },
   //This function will get the Access Token and use it to fetch information from Linkedin
   setAccessToken(req, res, next) {
-    const { accessToken } = req.res.locals; //get accessToken as local var in order to use it to fetch information from Linkedin
+    const {accessToken} = req.res.locals; //get accessToken as local var in order to use it to fetch information from Linkedin
 
     console.log(`Fetching Users Linkedin information`);
     handlers
@@ -64,5 +70,11 @@ module.exports = {
         console.log(`error occurred- ${err}`);
         res.json(errorObj(404, err));
       });
+  },
+  // This function will return a json with error message 
+  cancellErr(req, res) {
+    let cancellErr = req.query.error_description
+    console.log(`error occurred- ${cancellErr}`);
+    res.json(errorObj(303, cancellErr));
   }
 };
