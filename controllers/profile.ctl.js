@@ -1,6 +1,7 @@
 const User = require("../models/user"),
   Photo = require("../models/photo"),
-  errorObj = require("../errorObj");
+  errorObj = require("../errorObj"),
+  Video = require("../models/video");
 
 module.exports = {
   //this function will display the Users document
@@ -25,7 +26,7 @@ module.exports = {
       }
     });
 
-    refactorPhotos(response) //refactor information
+    refactor(response) //refactor information
       .then(response => res.json(response)) //display respones (refactored information) to browser
       .catch(err => {
         console.log(`error occurred- ${err}`);
@@ -54,9 +55,9 @@ module.exports = {
 };
 
 //This function will refactor photos saved in the User document as an Id, into their actual url saved in the Photo document
-async function refactorPhotos(response) {
+async function refactor(response) {
   let refactoredResponse = response; //creating a new argument to hold the new list of photo Urls, insead of photo id's
-  for (let i = 0; i < refactoredResponse.__v; i++) {
+  for (let i = 0; i < refactoredResponse.photos.length; i++) {
     let result = await Photo.findOne(
       {id: refactoredResponse.photos[i]},
       (error, result) => {
@@ -64,6 +65,13 @@ async function refactorPhotos(response) {
       }
     );
     refactoredResponse.photos[i] = result.url;
+  }
+
+  for (let i = 0; i < refactoredResponse.videos.length; i++) {
+    if (!refactoredResponse.videos[i]) continue;
+    refactoredResponse.videos[i] = await `https://www.youtube.com/watch?v=${
+      refactoredResponse.videos[i]
+    }`;
   }
   return refactoredResponse;
 }

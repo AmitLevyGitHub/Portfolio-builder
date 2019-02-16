@@ -105,7 +105,11 @@ module.exports = {
           });
         });
       }
-      res.redirect(`./showProfile`);
+      res.redirect(
+        `./videos?term=${
+          answers[Object.keys(answers)[Object.keys(answers).length - 1]]
+        }`
+      );
     }
   },
 };

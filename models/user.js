@@ -10,7 +10,8 @@ const user = new mongoose.Schema(
     firstName: String,
     lastName: String,
     profile: profile,
-    photos: [String]
+    photos: [String],
+    videos: [String]
   },
   { collection: "users" }
 );
