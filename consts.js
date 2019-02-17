@@ -1,7 +1,8 @@
 module.exports = {
   CLIENT_ID: `7759iu3fwfxudj`,
   CLIENT_SECRET: `xNb1FQmbhVrj7HqL`,
-  REDIRECT_URI: `http://localhost:3000/authorize`,
+  REDIRECT_URI: `https://portfolio-builder-server-side.herokuapp.com/authorize`,
+  //`http://localhost:3000/authorize`
   // `https://portfolio-builder-server-side.herokuapp.com/authorize`,
   SCOPE: [`r_basicprofile`],
   STATE: `1q2we3r45t6yu7i8`,
