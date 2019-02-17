@@ -4,7 +4,7 @@ const axios = require("axios"),
   User = require("../models/user"),
   handlers = require("./handlers");
 
-const {CLIENT_ID, CLIENT_SECRET, REDIRECT_URI, SCOPE, STATE} = consts;
+const { CLIENT_ID, CLIENT_SECRET, REDIRECT_URI, SCOPE, STATE } = consts;
 
 module.exports = {
   //This function will redirect the url to Linkedin, in order to get Access code
@@ -18,7 +18,10 @@ module.exports = {
   getAccessToken(req, res, next) {
     //Checking if the user refused to login into LinkedIn account
     //or refused to authorize permissions request from the service
-    if (req.query.error === "user_cancelled_login" || req.query.error === "user_cancelled_authorize") {
+    if (
+      req.query.error === "user_cancelled_login" ||
+      req.query.error === "user_cancelled_authorize"
+    ) {
       let errDesc = req.query.error_description;
       res.redirect(`/cancelled?error_description=${errDesc}`);
     } else {
@@ -57,14 +60,15 @@ module.exports = {
   },
   //This function will get the Access Token and use it to fetch information from Linkedin
   async setAccessToken(req, res, next) {
-    const {accessToken} = req.res.locals; //get accessToken as local var in order to use it to fetch information from Linkedin
+    const { accessToken } = req.res.locals; //get accessToken as local var in order to use it to fetch information from Linkedin
 
     console.log(`Fetching Users Linkedin information`);
-    handlers.getLinkdinInfo(accessToken) //get User Linkedin information
+    handlers
+      .getLinkdinInfo(accessToken) //get User Linkedin information
       .then(result => {
         userId = result.data.id;
         //Check if the user allready exist
-        User.findOne({id: userId}, (err, _result) => {
+        User.findOne({ id: userId }, (err, _result) => {
           console.log(userId);
           if (err) {
             console.log(`error occurred- ${err}`);
@@ -72,23 +76,25 @@ module.exports = {
           }
           //if user not exist, create new User document and save to db
           else if (!_result) {
-            handlers.saveUserToDb(result) //save information to DB 
+            handlers
+              .saveUserToDb(result) //save information to DB
               .then(id => {
                 process.env.ID = id; //set id as env var in order to prevent passing it in URL
                 res.redirect(`/questions`);
-              })
+              });
           } else {
             res.redirect(`/showProfile`);
           }
-        })
-      }).catch(err => {
+        });
+      })
+      .catch(err => {
         console.log(`error occurred- ${err}`);
         res.json(errorObj(404, err));
       });
   },
-  // This function will return a json with error message 
+  // This function will return a json with error message
   cancellErr(req, res) {
-    let cancellErr = req.query.error_description
+    let cancellErr = req.query.error_description;
     console.log(`error occurred- ${cancellErr}`);
     res.json(errorObj(303, cancellErr));
   }

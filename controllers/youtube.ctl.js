@@ -135,5 +135,17 @@ module.exports = {
         }
       }
     );
+  },
+  async getVideoDetails(req, res) {
+    let videoId = req.query.id;
+
+    await Video.findOne({ id: videoId }, (err, result) => {
+      if (err) {
+        console.log(`error occurred- ${err}`);
+        res.json(errorObj(404, err));
+      } else {
+        res.json(result);
+      }
+    });
   }
 };
