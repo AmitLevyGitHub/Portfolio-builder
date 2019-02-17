@@ -21,6 +21,7 @@ module.exports = {
 
   //This function will save the information fetched from Linkedin to the DataBase
   async saveUserToDb(response) {
+    console.log(response.data.id);
     const id = response.data.id; // id will be returned and save as env var
     const position = {
       //assuming user has no current position in their Linkedin profile, to prevent accsses to undefiend field

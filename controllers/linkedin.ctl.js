@@ -1,6 +1,7 @@
 const axios = require("axios"),
   consts = require("../consts"),
   errorObj = require("../errorObj"),
+  User = require("../models/user"),
   handlers = require("./handlers");
 
 const {CLIENT_ID, CLIENT_SECRET, REDIRECT_URI, SCOPE, STATE} = consts;
@@ -55,18 +56,32 @@ module.exports = {
     }
   },
   //This function will get the Access Token and use it to fetch information from Linkedin
-  setAccessToken(req, res, next) {
+  async setAccessToken(req, res, next) {
     const {accessToken} = req.res.locals; //get accessToken as local var in order to use it to fetch information from Linkedin
 
     console.log(`Fetching Users Linkedin information`);
-    handlers
-      .getLinkdinInfo(accessToken) //get User Linkedin information
-      .then(result => handlers.saveUserToDb(result)) //save information to DB
-      .then(id => {
-        process.env.ID = id; //set id as env var in order to prevent passing it in URL
-        res.redirect(`/questions`);
-      })
-      .catch(err => {
+    handlers.getLinkdinInfo(accessToken) //get User Linkedin information
+      .then(result => {
+        userId = result.data.id;
+        //Check if the user allready exist
+        User.findOne({id: userId}, (err, _result) => {
+          console.log(userId);
+          if (err) {
+            console.log(`error occurred- ${err}`);
+            res.json(errorObj(404, err));
+          }
+          //if user not exist, create new User document and save to db
+          else if (!_result) {
+            handlers.saveUserToDb(result) //save information to DB 
+              .then(id => {
+                process.env.ID = id; //set id as env var in order to prevent passing it in URL
+                res.redirect(`/questions`);
+              })
+          } else {
+            res.redirect(`/showProfile`);
+          }
+        })
+      }).catch(err => {
         console.log(`error occurred- ${err}`);
         res.json(errorObj(404, err));
       });

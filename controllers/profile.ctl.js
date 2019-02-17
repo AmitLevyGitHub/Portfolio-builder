@@ -71,7 +71,7 @@ async function refactor(response) {
     if (!refactoredResponse.videos[i]) continue;
     refactoredResponse.videos[i] = await `https://www.youtube.com/watch?v=${
       refactoredResponse.videos[i]
-    }`;
+      }`;
   }
   return refactoredResponse;
 }

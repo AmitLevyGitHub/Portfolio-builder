@@ -24,7 +24,7 @@ app.use((req, res, next) => {
 /* Routes */
 app.get("/", linkedinCtl.linkedinConnect); // Loging in with Linkedin- route will automatically redirect to "/authorize"
 app.get("/authorize", linkedinCtl.getAccessToken, linkedinCtl.setAccessToken); // Authorizing Linkedin connection- route will automatically redirect to "/questions
-app.get("/cancelled", linkedinCtl.cancellErr);
+app.get("/cancelled", linkedinCtl.cancellErr); // Cancelletion page
 app.post("/questions", unsplashCtl.getphotos); // Answering questions and sending the answers as POST request- route will automatically redirect to "/showProfile
 app.get("/videos", youtubeCtl.getVideos);
 app.get("/chooseVideos", youtubeCtl.chooseVideos);
