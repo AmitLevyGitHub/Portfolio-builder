@@ -8,7 +8,7 @@ module.exports = {
   async showProfile(req, res) {
     let id = process.env.ID; //getting User id fron env vars in order to find the loged in User's information in DataBase
     //finding the User in DataBase
-    let response = await User.findOne({id: id}, (err, result) => {
+    let response = await User.findOne({ id: id }, (err, result) => {
       if (err) {
         console.log(`error occurred- ${err}`);
         res.json(errorObj(404, err));
@@ -38,8 +38,8 @@ module.exports = {
   async updateSummary(req, res) {
     const summary = req.body.summary;
 
-    const conditions = {id: process.env.ID};
-    const doc = {$set: {"profile.summary": `${summary}`}};
+    const conditions = { id: process.env.ID };
+    const doc = { $set: { "profile.summary": `${summary}` } };
 
     await User.updateOne(conditions, doc, (err, result) => {
       if (err) res.json(errorObj(404, err));
@@ -59,7 +59,7 @@ async function refactor(response) {
   let refactoredResponse = response; //creating a new argument to hold the new list of photo Urls, insead of photo id's
   for (let i = 0; i < refactoredResponse.photos.length; i++) {
     let result = await Photo.findOne(
-      {id: refactoredResponse.photos[i]},
+      { id: refactoredResponse.photos[i] },
       (error, result) => {
         if (error) res.json(errorObj(404, error));
       }
@@ -71,7 +71,7 @@ async function refactor(response) {
     if (!refactoredResponse.videos[i]) continue;
     refactoredResponse.videos[i] = await `https://www.youtube.com/watch?v=${
       refactoredResponse.videos[i]
-      }`;
+    }`;
   }
   return refactoredResponse;
 }
