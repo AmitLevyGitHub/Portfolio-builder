@@ -6,7 +6,7 @@ const User = require("../models/user"),
 module.exports = {
   //this function will display the Users document
   async showProfile(req, res) {
-    let id = process.env.ID; //getting User id fron env vars in order to find the loged in User's information in DataBase
+    let id = req.query.id; //getting User id fron env vars in order to find the loged in User's information in DataBase
     //finding the User in DataBase
     let response = await User.findOne({ id: id }, (err, result) => {
       if (err) {
