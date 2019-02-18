@@ -72,6 +72,11 @@ module.exports = {
 
     term = req.query.term;
     id = req.query.id;
+
+    if (id === undefined) {
+      return res.json(errorObj(404, `Send id as parameter`));
+    }
+
     const response = await axiosCreate
       .get("/search", {
         params: {
@@ -108,6 +113,10 @@ module.exports = {
     let id = req.query.id;
     let videos = new Array();
 
+    if (id === undefined) {
+      return res.json(errorObj(404, `Send id as parameter`));
+    }
+
     let result = await User.findOne({ id: id }, (err, result) => {
       if (err) {
         console.log(`error occurred- ${err}`);
@@ -139,6 +148,10 @@ module.exports = {
   },
   async getVideoDetails(req, res) {
     let videoId = req.query.id;
+
+    if (videoId === undefined) {
+      return res.json(errorObj(404, `Send Video id as parameter`));
+    }
 
     await Video.findOne({ id: videoId }, (err, result) => {
       if (err) {

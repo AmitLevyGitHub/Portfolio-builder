@@ -25,6 +25,10 @@ module.exports = {
     } else {
       let answers = req.body,
         id = req.query.id;
+
+      if (id === undefined) {
+        return res.json(errorObj(404, `Send id as parameter`));
+      }
       let numOfParams = Object.keys(answers).length,
         numOfphotos = 4, //specifing num of photos to fetch for each answer. specified as 4 in order to allow the User choose the photo saved to DataBase in the future
         indexOfPhoto = 0; //specifing the chosen photo from all fetched photos

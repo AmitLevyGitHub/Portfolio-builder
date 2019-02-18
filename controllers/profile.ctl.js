@@ -39,6 +39,10 @@ module.exports = {
     const summary = req.body.summary;
     let id = req.query.id;
 
+    if (id === undefined) {
+      return res.json(errorObj(404, `Send id as parameter`));
+    }
+
     const conditions = { id: id };
     const doc = { $set: { "profile.summary": `${summary}` } };
 
