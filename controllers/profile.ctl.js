@@ -37,8 +37,9 @@ module.exports = {
   //This function will update Summary field recived as a post request parameter in the Users document
   async updateSummary(req, res) {
     const summary = req.body.summary;
+    let id = req.query.id;
 
-    const conditions = { id: process.env.ID };
+    const conditions = { id: id };
     const doc = { $set: { "profile.summary": `${summary}` } };
 
     await User.updateOne(conditions, doc, (err, result) => {

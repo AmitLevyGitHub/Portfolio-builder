@@ -80,7 +80,7 @@ module.exports = {
               .saveUserToDb(result) //save information to DB
               .then(id => {
                 process.env.ID = id; //set id as env var in order to prevent passing it in URL
-                res.redirect(`/questions`);
+                res.redirect(`/questions?id=${userId}`);
               });
           } else {
             // process.env.ID = userId;

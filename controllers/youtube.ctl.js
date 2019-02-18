@@ -15,8 +15,8 @@ const axiosCreate = axios.create({
   }
 });
 
-saveToDB = async videos => {
-  let id = process.env.ID;
+saveToDB = async (videos, _id) => {
+  let id = _id;
 
   for (let i = 0; i < videos.length; i++) {
     let videoId = videos[i].id;
@@ -71,6 +71,7 @@ module.exports = {
     let videosToPresent = new Array();
 
     term = req.query.term;
+    id = req.query.term;
     const response = await axiosCreate
       .get("/search", {
         params: {
@@ -99,12 +100,12 @@ module.exports = {
     }
 
     res.json(videosToPresent);
-    saveToDB(videos);
+    saveToDB(videos, id);
   },
   async chooseVideos(req, res) {
     //choices sent as choices param (Array) as get request
     let choices = req.query.coices;
-    let id = process.env.ID;
+    let id = req.query.id;
     let videos = new Array();
 
     let result = await User.findOne({ id: id }, (err, result) => {

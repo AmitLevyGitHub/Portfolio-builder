@@ -4,7 +4,7 @@ const axios = require("axios"),
   User = require("../models/user"),
   Photo = require("../models/photo");
 
-const {UNSPLASH_KEY} = consts;
+const { UNSPLASH_KEY } = consts;
 
 //Creating a new instance of axios
 const axiosCreate = axios.create({
@@ -24,7 +24,7 @@ module.exports = {
       );
     } else {
       let answers = req.body,
-        id = process.env.ID;
+        id = req.query.id;
       let numOfParams = Object.keys(answers).length,
         numOfphotos = 4, //specifing num of photos to fetch for each answer. specified as 4 in order to allow the User choose the photo saved to DataBase in the future
         indexOfPhoto = 0; //specifing the chosen photo from all fetched photos
@@ -61,7 +61,7 @@ module.exports = {
           photoUrl = results[i][indexOfPhoto].urls.regular;
 
         //checking if the photo exists in Database
-        await Photo.findOne({id: photoId}, (err, result) => {
+        await Photo.findOne({ id: photoId }, (err, result) => {
           if (err) {
             console.log(`error occurred- ${err}`);
             res.json(errorObj(404, err));
@@ -86,7 +86,7 @@ module.exports = {
           }
 
           //save photo id to User's photos array
-          User.findOne({id: id}, (err, result) => {
+          User.findOne({ id: id }, (err, result) => {
             if (err) {
               console.log(`error occurred- ${err}`);
               res.json(errorObj(404, err));
@@ -108,8 +108,8 @@ module.exports = {
       res.redirect(
         `./videos?term=${
           answers[Object.keys(answers)[Object.keys(answers).length - 1]]
-        }`
+        }&id=${id}`
       );
     }
-  },
+  }
 };
