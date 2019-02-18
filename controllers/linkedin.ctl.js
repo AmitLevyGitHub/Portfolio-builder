@@ -83,7 +83,7 @@ module.exports = {
                 res.redirect(`/questions`);
               });
           } else {
-            process.env.ID = _result.id;
+            process.env.ID = userId;
             res.redirect(`/showProfile`);
           }
         });
