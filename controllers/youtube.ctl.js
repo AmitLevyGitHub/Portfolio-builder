@@ -71,7 +71,7 @@ module.exports = {
     let videosToPresent = new Array();
 
     term = req.query.term;
-    id = req.query.term;
+    id = req.query.id;
     const response = await axiosCreate
       .get("/search", {
         params: {
