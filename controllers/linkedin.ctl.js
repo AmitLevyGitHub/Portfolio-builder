@@ -78,12 +78,10 @@ module.exports = {
             handlers
               .saveUserToDb(result) //save information to DB
               .then(id => {
-                res.redirect(`showProfile?id=${userId}`);
-                //res.redirect(`./getDetails?id=${userId}&signedIn=false`);
+                res.json({ id: userId, singedIn: false });
               });
           } else {
-            res.redirect(`showProfile?id=${userId}`);
-            //res.redirect(`./getDetails?id=${userId}&signedIn=true`);
+            res.json({ id: userId, singedIn: false });
           }
         });
       })
