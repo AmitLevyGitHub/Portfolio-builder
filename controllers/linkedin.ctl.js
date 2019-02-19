@@ -81,7 +81,7 @@ module.exports = {
                 res.json({ id: userId, singedIn: false });
               });
           } else {
-            res.json({ id: userId, singedIn: false });
+            res.json({ id: userId, singedIn: true });
           }
         });
       })
