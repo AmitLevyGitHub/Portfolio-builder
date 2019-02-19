@@ -1,6 +1,7 @@
 const User = require("../models/user"),
   Photo = require("../models/photo"),
   errorObj = require("../errorObj"),
+  jsonObj = require("../jsonObj"),
   Video = require("../models/video");
 
 module.exports = {

@@ -38,7 +38,7 @@ module.exports = {
     }
 
     //Checking if User exists in DataBase
-    await User.findOne({id: id}, (err, result) => {
+    await User.findOne({ id: id }, (err, result) => {
       if (err) {
         console.log(`error occurred- ${err}`);
         res.json(errorObj(404, err));
@@ -47,6 +47,7 @@ module.exports = {
         if (!result) {
           // if User does not exist, create new user document
           console.log(`Creating new User document for User id ${id}`);
+          console.log(response.data.pictureUrl);
           const user = new User({
             id: `${id}`,
             firstName: `${response.data.firstName}`,

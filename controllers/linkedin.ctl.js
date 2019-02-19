@@ -61,7 +61,6 @@ module.exports = {
   //This function will get the Access Token and use it to fetch information from Linkedin
   async setAccessToken(req, res, next) {
     const { accessToken } = req.res.locals; //get accessToken as local var in order to use it to fetch information from Linkedin
-
     console.log(`Fetching Users Linkedin information`);
     handlers
       .getLinkdinInfo(accessToken) //get User Linkedin information
@@ -79,12 +78,12 @@ module.exports = {
             handlers
               .saveUserToDb(result) //save information to DB
               .then(id => {
-                process.env.ID = id; //set id as env var in order to prevent passing it in URL
-                res.redirect(`/questions?id=${userId}`);
+                res.redirect(`showProfile?id=${userId}`);
+                //res.redirect(`./getDetails?id=${userId}&signedIn=false`);
               });
           } else {
-            // process.env.ID = userId;
-            res.redirect(`/showProfile?id=${userId}`);
+            res.redirect(`showProfile?id=${userId}`);
+            //res.redirect(`./getDetails?id=${userId}&signedIn=true`);
           }
         });
       })

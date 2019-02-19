@@ -5,7 +5,7 @@ let profile = new mongoose.Schema({
   headLine: String,
   summary: String,
   numOfConnections: Number,
-  ProfilePicture: String,
+  profilePicture: String,
   currentPosition: {
     title: String,
     company: String,

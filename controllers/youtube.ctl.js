@@ -141,7 +141,7 @@ module.exports = {
           res.json(errorObj(404, err));
         } else {
           console.log(`Videos updated according to user's choice`);
-          res.redirect(`/showProfile`);
+          res.json(errorObj(200, `Choices Saved to DB`));
         }
       }
     );

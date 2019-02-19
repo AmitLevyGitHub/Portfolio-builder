@@ -20,6 +20,7 @@
     "axios": "^0.18.0",
     "body-parser": "^1.18.3",
     "express": "^4.16.4",
+    "express-json-promise": "^0.1.2",
     "mongoose": "^5.4.5"
   },
   "devDependencies": {}
