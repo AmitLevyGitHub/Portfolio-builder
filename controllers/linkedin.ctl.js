@@ -32,6 +32,7 @@ module.exports = {
         //checking for possible CSRF attack
         res.json(errorObj(404, `CSRF attack suspection`));
       }
+
       const params = new URLSearchParams();
       params.append("grant_type", "authorization_code");
       params.append("code", authCode);
@@ -78,10 +79,15 @@ module.exports = {
             handlers
               .saveUserToDb(result) //save information to DB
               .then(id => {
-                res.json({ id: userId, singedIn: false });
+                console.log("resirecting to react");
+                res.redirect(
+                  `http://localhost:3001?id=${userId}&singedIn=false`
+                );
               });
           } else {
-            res.json({ id: userId, singedIn: true });
+            //res.redirect(`http://localhost:3001?id=${userId}`);
+            console.log("resirecting to react");
+            res.redirect(`http://localhost:3001?id=${userId}&singedIn=true`);
           }
         });
       })
