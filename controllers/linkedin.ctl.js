@@ -23,7 +23,9 @@ module.exports = {
       req.query.error === "user_cancelled_authorize"
     ) {
       let errDesc = req.query.error_description;
-      res.redirect(`http://localhost:3001?id=error&singedIn=error`);
+      res.redirect(
+        `http://shenkar.html5-book.co.il/2018-2019/dcs/dev_276?id=error&singedIn=error`
+      );
     } else {
       const authCode = req.query.code;
       const state = req.query.state;
@@ -81,7 +83,7 @@ module.exports = {
               .then(id => {
                 console.log("resirecting to react");
                 res.redirect(
-                  `http://localhost:3001?id=${userId}&singedIn=false`
+                  `http://shenkar.html5-book.co.il/2018-2019/dcs/dev_276?id=${userId}&singedIn=false`
                   //http://shenkar.html5-book.co.il/2018-2019/dcs/dev_276?id=${userId}&singedIn=false
                 );
               });
@@ -89,7 +91,7 @@ module.exports = {
             //res.redirect(`http://localhost:3001?id=${userId}`);
             console.log("resirecting to react");
             res.redirect(
-              `http://localhost:3001?id=${userId}&singedIn=true`
+              `http://shenkar.html5-book.co.il/2018-2019/dcs/dev_276?id=${userId}&singedIn=true`
               //http://shenkar.html5-book.co.il/2018-2019/dcs/dev_276?id=${userId}&singedIn=true
             );
           }
