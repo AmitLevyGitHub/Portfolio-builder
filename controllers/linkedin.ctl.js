@@ -23,7 +23,7 @@ module.exports = {
       req.query.error === "user_cancelled_authorize"
     ) {
       let errDesc = req.query.error_description;
-      res.redirect(`/cancelled?error_description=${errDesc}`);
+      res.redirect(`/http://localhost:3001?id=error&singedIn=error`);
     } else {
       const authCode = req.query.code;
       const state = req.query.state;
