@@ -81,14 +81,16 @@ module.exports = {
               .then(id => {
                 console.log("resirecting to react");
                 res.redirect(
-                  `http://shenkar.html5-book.co.il/2018-2019/dcs/dev_276?id=${userId}&singedIn=false`
+                  `http://localhost:3001?id=${userId}&singedIn=false`
+                  //http://shenkar.html5-book.co.il/2018-2019/dcs/dev_276?id=${userId}&singedIn=false
                 );
               });
           } else {
             //res.redirect(`http://localhost:3001?id=${userId}`);
             console.log("resirecting to react");
             res.redirect(
-              `http://shenkar.html5-book.co.il/2018-2019/dcs/dev_276?id=${userId}&singedIn=true`
+              `http://localhost:3001?id=${userId}&singedIn=true`
+              //http://shenkar.html5-book.co.il/2018-2019/dcs/dev_276?id=${userId}&singedIn=true
             );
           }
         });
